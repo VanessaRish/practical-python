@@ -2,11 +2,11 @@ import sys
 import csv
 
 
-def portfolio_cost(filename):
+def portfolio_cost(file_name):
     total_amount = 0
-    with open(filename, "r") as file:
+    with open(file_name, "r") as file:
         lines = csv.reader(file)
-        _ = next(lines)
+        next(lines)
         for line in lines:
             try:
                 total_amount += int(line[1]) * float(line[2])
