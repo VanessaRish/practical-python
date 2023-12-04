@@ -6,18 +6,20 @@ def portfolio_cost(file_name):
     total_amount = 0
     with open(file_name, "r") as file:
         lines = csv.reader(file)
-        next(lines)
-        for line in lines:
+        headers = next(lines)
+        for rowno, row in enumerate(lines, start=1):
+            record = dict(zip(headers, row))
             try:
-                total_amount += int(line[1]) * float(line[2])
+                nshares = int(record['shares'])
+                price = float(record['price'])
+                total_amount += nshares * price
             except ValueError as e:
-                print("Value is missing!")
-                print(e)
+                print(f'Row {rowno}: Bad row: {row}')
                 continue
     return total_amount
 
 
-filename = "./Data/portfolio.csv"
+filename = "./Data/portfoliodate.csv"
 if len(sys.argv) == 2:
     filename = sys.argv[1]
 
