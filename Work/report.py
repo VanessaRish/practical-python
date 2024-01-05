@@ -5,6 +5,10 @@ import csv
 
 
 def read_portfolio(file_name):
+    """
+    Read a stock portfolio file into a list of dictionaries with keys
+    name, shares, and price.
+    """
     portfolio = []
     with open(file_name, "rt") as file:
         rows = csv.reader(file)
@@ -27,6 +31,9 @@ def read_portfolio(file_name):
 
 
 def read_prices(file_name):
+    """
+    Read a CSV file of price data into a dict mapping names to prices.
+    """
     prices = {}
     with open(file_name, "rt") as file:
         rows = csv.reader(file)
@@ -37,8 +44,11 @@ def read_prices(file_name):
 
 
 def make_report(portfolio, prices):
+    """
+    Make a list of (name, shares, price, change) tuples given a portfolio list
+    and prices dictionary.
+    """
     stocks = []
-    headers = ["Name", "Shares", "Price", "Change"]
     for stock in portfolio:
         if stock["name"] in prices:
             stocks.append(
@@ -49,13 +59,28 @@ def make_report(portfolio, prices):
                     stock["price"] - prices[stock["name"]],
                 )
             )
+
+    print_report(stocks)
+
+
+def print_report(report):
+    """
+    Print a nicely formated table from a list of (name, shares, price, change) tuples.
+    """
+    headers = ('Name', 'Shares', 'Price', 'Change')
     print(f"{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}")
     print(f"{10 * '-':>10s} {10 * '-':>10s} {10 * '-':>10s} {10 * '-':>10s}")
-    for stock in stocks:
-        print("{:>10s} {:>10d} {:>10s} {:>10.2f}".format(*stock))
-    return stocks
+    for row in report:
+        print('{:>10s} {:>10d} {:>10s} {:>10.2f}'.format(*row))
 
 
-portfolio = read_portfolio("Data/portfoliodate.csv")
-prices = read_prices("Data/prices.csv")
-make_report(portfolio, prices)
+def portfolio_report(portfolio_file, prices_file):
+    """
+    Make a stock report given portfolio and price data files.
+    """
+    portfolio = read_portfolio(portfolio_file)
+    prices = read_prices(prices_file)
+    make_report(portfolio, prices)
+
+
+portfolio_report("Data/portfoliodate.csv", "Data/prices.csv")
