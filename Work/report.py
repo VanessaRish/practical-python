@@ -1,7 +1,7 @@
 # report.py
 #
 # Exercise 2.4
-import csv
+import sys
 
 from fileparse import parse_csv
 
@@ -66,4 +66,9 @@ def portfolio_report(portfolio_file, prices_file):
     make_report(portfolio, prices)
 
 
-portfolio_report("Data/portfoliodate.csv", "Data/prices.csv")
+def main(args_list):
+    return portfolio_report(args_list[1], args_list[2])
+
+
+if __name__ == "__main__":
+    main(sys.argv)
