@@ -1,21 +1,20 @@
 import sys
 import csv
 
+from report import read_portfolio
+
 
 def portfolio_cost(file_name):
     total_amount = 0
-    with open(file_name, "r") as file:
-        lines = csv.reader(file)
-        headers = next(lines)
-        for rowno, row in enumerate(lines, start=1):
-            record = dict(zip(headers, row))
-            try:
-                nshares = int(record['shares'])
-                price = float(record['price'])
-                total_amount += nshares * price
-            except ValueError as e:
-                print(f'Row {rowno}: Bad row: {row}')
-                continue
+    portfolio = read_portfolio(file_name)
+    for idx, record in enumerate(portfolio):
+        try:
+            shares = record['shares']
+            price = record['price']
+            total_amount += shares * price
+        except ValueError as e:
+            print(f'Row {idx}: Bad row: {record}')
+            continue
     return total_amount
 
 

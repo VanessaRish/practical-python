@@ -3,29 +3,17 @@
 # Exercise 2.4
 import csv
 
+from fileparse import parse_csv
+
 
 def read_portfolio(file_name):
     """
     Read a stock portfolio file into a list of dictionaries with keys
     name, shares, and price.
     """
-    portfolio = []
-    with open(file_name, "rt") as file:
-        rows = csv.reader(file)
-        headers = next(rows)
-        for rowno, row in enumerate(rows, start=1):
-            try:
-                record = dict(zip(headers, row))
-                portfolio.append(
-                    {
-                        "name": record['name'],
-                        "shares": int(record['shares']),
-                        "price": float(record['price']),
-                    }
-                )
-            except Exception as e:
-                print(f'Row {rowno}: Bad row: {row}')
-                continue
+    portfolio = parse_csv(
+        file_name, types=[str, int, float], select=["name", "shares", "price"]
+    )
 
     return portfolio
 
@@ -34,12 +22,7 @@ def read_prices(file_name):
     """
     Read a CSV file of price data into a dict mapping names to prices.
     """
-    prices = {}
-    with open(file_name, "rt") as file:
-        rows = csv.reader(file)
-        for row in rows:
-            if len(row) > 1:
-                prices[row[0]] = float(row[1])
+    prices = dict(parse_csv(file_name, types=[str, float], has_headers=False))
     return prices
 
 
@@ -67,11 +50,11 @@ def print_report(report):
     """
     Print a nicely formated table from a list of (name, shares, price, change) tuples.
     """
-    headers = ('Name', 'Shares', 'Price', 'Change')
+    headers = ("Name", "Shares", "Price", "Change")
     print(f"{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}")
     print(f"{10 * '-':>10s} {10 * '-':>10s} {10 * '-':>10s} {10 * '-':>10s}")
     for row in report:
-        print('{:>10s} {:>10d} {:>10s} {:>10.2f}'.format(*row))
+        print("{:>10s} {:>10d} {:>10s} {:>10.2f}".format(*row))
 
 
 def portfolio_report(portfolio_file, prices_file):
