@@ -5,6 +5,7 @@ import sys
 
 from fileparse import parse_csv
 from stock import Stock
+import tableformat
 
 
 def read_portfolio(file_name):
@@ -40,36 +41,37 @@ def make_report(portfolio, prices):
                 (
                     stock.name,
                     stock.shares,
-                    f"${round(prices[stock.name], 2)}",
-                    stock.price - prices[stock.name],
+                    round(prices[stock.name], 2),
+                    prices[stock.name] - stock.price,
                 )
             )
+    return stocks
 
-    print_report(stocks)
 
-
-def print_report(report):
+def print_report(report, formatter):
     """
     Print a nicely formated table from a list of (name, shares, price, change) tuples.
     """
-    headers = ("Name", "Shares", "Price", "Change")
-    print(f"{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}")
-    print(f"{10 * '-':>10s} {10 * '-':>10s} {10 * '-':>10s} {10 * '-':>10s}")
-    for row in report:
-        print("{:>10s} {:>10d} {:>10s} {:>10.2f}".format(*row))
+    formatter.headings(["Name", "Shares", "Price", "Change"])
+    for name, shares, price, change in report:
+        rowdata = [name, str(shares), f"{price:0.2f}", f"{change:0.2f}"]
+        formatter.row(rowdata)
 
 
-def portfolio_report(portfolio_file, prices_file):
+def portfolio_report(portfolio_file, prices_file, fmt="txt"):
     """
     Make a stock report given portfolio and price data files.
     """
     portfolio = read_portfolio(portfolio_file)
     prices = read_prices(prices_file)
-    make_report(portfolio, prices)
+    report = make_report(portfolio, prices)
+
+    formatter = tableformat.create_formatter(fmt)
+    print_report(report, formatter)
 
 
 def main(args_list):
-    return portfolio_report(args_list[1], args_list[2])
+    return portfolio_report(args_list[1], args_list[2], args_list[3])
 
 
 if __name__ == "__main__":
