@@ -4,6 +4,7 @@
 import sys
 
 from fileparse import parse_csv
+from stock import Stock
 
 
 def read_portfolio(file_name):
@@ -15,7 +16,7 @@ def read_portfolio(file_name):
         portfolio = parse_csv(
             file, types=[str, int, float], select=["name", "shares", "price"]
         )
-    return portfolio
+    return [Stock(p["name"], p["shares"], p["price"]) for p in portfolio]
 
 
 def read_prices(file_name):
@@ -34,13 +35,13 @@ def make_report(portfolio, prices):
     """
     stocks = []
     for stock in portfolio:
-        if stock["name"] in prices:
+        if stock.name in prices:
             stocks.append(
                 (
-                    stock["name"],
-                    stock["shares"],
-                    f'${round(prices[stock["name"]], 2)}',
-                    stock["price"] - prices[stock["name"]],
+                    stock.name,
+                    stock.shares,
+                    f"${round(prices[stock.name], 2)}",
+                    stock.price - prices[stock.name],
                 )
             )
 
