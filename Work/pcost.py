@@ -8,7 +8,7 @@ def portfolio_cost(file_name):
     portfolio = read_portfolio(file_name)
     for idx, record in enumerate(portfolio):
         try:
-            total_amount += record.cost()
+            total_amount += record.cost
         except ValueError as e:
             print(f"Row {idx}: Bad row: {record}")
             continue
