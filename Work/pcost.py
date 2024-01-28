@@ -6,13 +6,7 @@ from report import read_portfolio
 def portfolio_cost(file_name):
     total_amount = 0
     portfolio = read_portfolio(file_name)
-    for idx, record in enumerate(portfolio):
-        try:
-            total_amount += record.cost
-        except ValueError as e:
-            print(f"Row {idx}: Bad row: {record}")
-            continue
-    return total_amount
+    return portfolio.total_cost
 
 
 def main(args_list):

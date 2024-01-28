@@ -5,6 +5,7 @@ import sys
 
 from fileparse import parse_csv
 from stock import Stock
+from portfolio import Portfolio
 import tableformat
 
 
@@ -14,10 +15,11 @@ def read_portfolio(file_name):
     name, shares, and price.
     """
     with open(file_name) as file:
-        portfolio = parse_csv(
+        portfolio_data = parse_csv(
             file, types=[str, int, float], select=["name", "shares", "price"]
         )
-    return [Stock(p["name"], p["shares"], p["price"]) for p in portfolio]
+    portfolio = [Stock(p["name"], p["shares"], p["price"]) for p in portfolio_data]
+    return Portfolio(portfolio)
 
 
 def read_prices(file_name):
