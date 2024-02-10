@@ -9,16 +9,18 @@ from portfolio import Portfolio
 import tableformat
 
 
-def read_portfolio(file_name):
+def read_portfolio(file_name, **opts):
     """
     Read a stock portfolio file into a list of dictionaries with keys
     name, shares, and price.
     """
     with open(file_name) as file:
         portfolio_data = parse_csv(
-            file, types=[str, int, float], select=["name", "shares", "price"]
+            file, types=[str, int, float],
+            select=["name", "shares", "price"],
+            **opts
         )
-    portfolio = [Stock(p["name"], p["shares"], p["price"]) for p in portfolio_data]
+    portfolio = [Stock(**p) for p in portfolio_data]
     return Portfolio(portfolio)
 
 
