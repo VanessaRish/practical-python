@@ -1,9 +1,26 @@
 from collections import Counter
+import stock
+from fileparse import parse_csv
 
 
 class Portfolio:
-    def __init__(self, holdings):
-        self._holdings = holdings
+    def __init__(self):
+        self._holdings = []
+
+    @classmethod
+    def from_csv(cls, lines, **opts):
+        self = cls()
+        portfolio_dict = parse_csv(
+            lines, types=[str, int, float], select=["name", "shares", "price"], **opts
+        )
+        for d in portfolio_dict:
+            self.append(stock.Stock(**d))
+        return self
+
+    def append(self, holding):
+        if not isinstance(holding, stock.Stock):
+            raise TypeError("Expected a Stock instance")
+        self._holdings.append(holding)
 
     def __iter__(self):
         return self._holdings.__iter__()
