@@ -4,9 +4,9 @@
 import sys
 
 from fileparse import parse_csv
-from stock import Stock
 from portfolio import Portfolio
 import tableformat
+import logging
 
 
 def read_portfolio(file_name, **opts):
@@ -67,6 +67,14 @@ def portfolio_report(portfolio_file, prices_file, fmt="txt"):
 
     formatter = tableformat.create_formatter(fmt)
     print_report(report, formatter)
+
+
+def setup_logger():
+    logging.basicConfig(
+        filename='report_log',
+        filemode='w',
+        level=logging.WARNING
+    )
 
 
 def main(args_list):
